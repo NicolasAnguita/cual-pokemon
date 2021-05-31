@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>Atrapalos a todos!</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <style>
+        h1{
+            text-align: center;
+        }
+    </style>
+
+
+    <script>
+        $(document).ready(function(){
+
+            for (let i = 1; i < 151; i++) {
+            $(".col1").append(`<img indx="${i}" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${i}.png">`);           
+            }
+
+            $("img").on("click", function () {
+                //obtengo el indx que sera el index del arreglo que tiene la info de cada pokemon
+                //console.log($(this).attr("indx"));
+                let indx =$(this).attr("indx");
+                //accedo al datos del poke y los guardo en variables para desplegar
+                $(".tipos").html(" ");
+                
+                
+
+                $.get(`https://pokeapi.co/api/v2/pokemon/${indx}`,function(res){
+                    console.log(res);
+                    //rescata la info a desplegar: Name, Foto, Types, Height, Weight
+                    let name= res.name;
+                    $("h3").html(name);
+
+                    let urlimg= res.sprites.front_shiny;
+                    console.log(urlimg);
+                    $("#imgpoke").attr("src",urlimg);
+
+                    //este es un arreglo de los tipos
+                    let arrTypes= res.types;
+                    //esto agrega los tipos a ul de el html
+                    for (const tipos of arrTypes) {
+                        $(".tipos").append(`<li>${tipos.type.name}</li>`)
+                    }
+
+                    let height= res.height;
+                    $("h4.altura").after(height);
+                    let weight = res.weight ;   
+                    $("h4.peso").after(weight);
+
+                },"json");         
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col col-10 mt-3 col1">
+                <div id="bulbasaur">
+                    <img src="" id="imagen">
+                    
+                    <h1 class="mt-3">¿Cuál es ese Pokémon?<span id="nombre"></span></h1>
+                    <ul id="habilidades">
+                    </ul>        
+                </div>
+            </div>
+            <div class="col col-2">
+                <h1 class="mt-5">Pokedex</h1>
+                <h6 class="mt-3">Haz click en cualquier pokemon para ver sus caracteristicas</h6>
+                <h3></h3>
+                <img src="" id="imgpoke">
+                <h4 class="tipo">Tipo</h4>
+                <ul class="tipos">
+
+                </ul>
+                <h4 class="altura">Altura</h4>
+                <h4 class="peso">Peso</h4>
+                <!-- <input id="pokemon" type="text">
+                <button id="accion">BUSCAR!</button> -->
+            </div>
+        </div>      
+    </div>
+
+
+</body>
+
+</html>
